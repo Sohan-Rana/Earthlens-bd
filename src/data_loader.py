@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 
 from .config import DATA_PATH, REAL_DATA_PATH
@@ -7,6 +9,16 @@ REQUIRED_COLUMNS = {"date", "division", "temperature_c", "rainfall_mm", "ndvi"}
 
 def default_path():
     return REAL_DATA_PATH if REAL_DATA_PATH.exists() else DATA_PATH
+
+
+def ensure_data() -> None:
+    """Create the synthetic sample dataset if no data file exists yet."""
+    if DATA_PATH.exists() or REAL_DATA_PATH.exists():
+        return
+    from scripts.generate_data import generate
+
+    DATA_PATH.parent.mkdir(exist_ok=True)
+    generate().to_csv(DATA_PATH, index=False)
 
 
 def validate_data(df: pd.DataFrame) -> None:
@@ -19,7 +31,10 @@ def validate_data(df: pd.DataFrame) -> None:
 
 
 def load_data(path=None) -> pd.DataFrame:
-    df = pd.read_csv(path or default_path(), parse_dates=["date"])
+    if path is None:
+        ensure_data()
+        path = default_path()
+    df = pd.read_csv(Path(path), parse_dates=["date"])
     validate_data(df)
     df["year"] = df["date"].dt.year
     df["month"] = df["date"].dt.month
