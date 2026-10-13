@@ -2,12 +2,6 @@
 
 Climate and environmental data explorer for Bangladesh, built with Python, Pandas, Plotly and Streamlit.
 
-## Preview
-
-![Temperature trend](assets/temperature_trend.png)
-![Rainfall overview](assets/rainfall_overview.png)
-![NDVI trend](assets/ndvi_trend.png)
-
 ## Features
 
 - Temperature and rainfall trends by division
@@ -19,16 +13,13 @@ Climate and environmental data explorer for Bangladesh, built with Python, Panda
 
 ## Data
 
-- By default the app uses synthetic sample data created by `scripts/generate_data.py`.
+- By default the app uses synthetic sample data, created automatically on first run.
 - Real monthly temperature and rainfall can be downloaded from NASA POWER with `scripts/fetch_power_data.py`.
 - NDVI is still synthetic until satellite data is added.
 
 ## Quick start
 
     pip install -r requirements.txt
-    python -m scripts.generate_data
-    python -m scripts.export_charts
-    python -m scripts.fetch_power_data   # optional, needs internet
     streamlit run app.py
 
 ## Tests
