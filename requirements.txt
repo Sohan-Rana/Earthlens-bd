@@ -1,0 +1,7 @@
+streamlit
+pandas
+numpy
+plotly>=5.24
+matplotlib
+pytest
+requests
