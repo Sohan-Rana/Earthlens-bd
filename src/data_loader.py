@@ -15,7 +15,7 @@ def ensure_data() -> None:
     """Create the synthetic sample dataset if no data file exists yet."""
     if DATA_PATH.exists() or REAL_DATA_PATH.exists():
         return
-    from scripts.generate_data import generate
+    from .sample_data import generate
 
     DATA_PATH.parent.mkdir(exist_ok=True)
     generate().to_csv(DATA_PATH, index=False)
