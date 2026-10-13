@@ -3,7 +3,7 @@
 Climate and environmental data explorer for Bangladesh, built with Python, Pandas, Plotly and Streamlit.
 
 ## Features
-
+**Live demo:** https://earthlens-bd-jdsc6rgqc6uazwhhvy9nyh.streamlit.app/
 - Temperature and rainfall trends by division
 - Temperature anomaly against a 2000-2010 baseline
 - NDVI green cover charts
