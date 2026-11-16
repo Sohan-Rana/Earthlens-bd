@@ -11,6 +11,11 @@ def default_path():
     return REAL_DATA_PATH if REAL_DATA_PATH.exists() else DATA_PATH
 
 
+def data_source() -> str:
+    """'real' when NASA POWER data is present, otherwise 'sample'."""
+    return "real" if REAL_DATA_PATH.exists() else "sample"
+
+
 def ensure_data() -> None:
     """Create the synthetic sample dataset if no data file exists yet."""
     if DATA_PATH.exists() or REAL_DATA_PATH.exists():
