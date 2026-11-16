@@ -1,6 +1,6 @@
 import streamlit as st
 
-from src.data_loader import load_data, filter_data, data_source
+from src.data_loader import load_data, filter_data, data_source, ndvi_source
 from src.climate_analysis import (
     annual_summary, temperature_anomaly, linear_trend, risk_scores,
     hottest_years, correlation_matrix,
@@ -13,8 +13,12 @@ st.title("🌍 EarthLens BD")
 st.caption("Climate & Environmental Data Explorer for Bangladesh")
 
 if data_source() == "real":
-    st.success("Temperature and rainfall: real NASA POWER data. "
-               "NDVI: synthetic sample (MODIS NDVI planned).")
+    if ndvi_source() == "modis":
+        st.success("Temperature and rainfall: real NASA POWER data. "
+                   "NDVI: real NASA MODIS MOD13A3 (1 km, monthly).")
+    else:
+        st.success("Temperature and rainfall: real NASA POWER data. "
+                   "NDVI: synthetic sample (MODIS NDVI planned).")
 else:
     st.warning("Demo mode: all data is synthetic sample data. "
                "Run `python -m scripts.fetch_power_data` to use real NASA POWER data.")
