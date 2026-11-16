@@ -96,6 +96,14 @@ with tab8:
         st.info("Select a longer year range (at least 8 years) to run the test.")
     else:
         st.dataframe(table, hide_index=True, use_container_width=True)
+    if variable == "rainfall" and data_source() == "real":
+        st.warning(
+            "Data-quality note: NASA POWER rainfall for several divisions rises "
+            "abruptly after 2015 (some monthly totals exceed 1,500 mm). The "
+            "rainfall trends above may reflect this jump in the source data and "
+            "not a real climate change. Check against another rainfall source "
+            "before drawing conclusions."
+        )
     st.caption(
         "Mann-Kendall test (two-sided, alpha = 0.05) on annual values per division. "
         "Sen's slope is the median yearly change. 'Significant = Yes' means the "
