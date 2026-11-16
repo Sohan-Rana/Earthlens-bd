@@ -6,7 +6,7 @@ from src.nasa_power import fetch_all
 
 def main():
     real = fetch_all(START_YEAR, END_YEAR)
-    # NASA POWER has no NDVI, so keep the synthetic NDVI until MODIS data is added.
+    # NASA POWER has no NDVI; keep the NDVI column (load_data() swaps in real MODIS NDVI when data/bd_ndvi_modis.csv exists).
     sample = pd.read_csv(DATA_PATH, parse_dates=["date"])[["date", "division", "ndvi"]]
     merged = real.merge(sample, on=["date", "division"], how="left")
     merged.to_csv(REAL_DATA_PATH, index=False)
