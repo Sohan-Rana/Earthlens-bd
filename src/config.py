@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "climate_data.csv"
 REAL_DATA_PATH = ROOT / "data" / "climate_data_real.csv"
+NDVI_PATH = ROOT / "data" / "bd_ndvi_modis.csv"  # NASA MODIS MOD13A3.061 via AppEEARS
 ASSETS_DIR = ROOT / "assets"
 
 DIVISIONS = [

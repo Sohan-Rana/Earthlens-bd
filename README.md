@@ -15,7 +15,13 @@ Climate and environmental data explorer for Bangladesh, built with Python, Panda
 
 - By default the app uses synthetic sample data, created automatically on first run.
 - Real monthly temperature and rainfall can be downloaded from NASA POWER with `scripts/fetch_power_data.py`.
-- NDVI is still synthetic until satellite data is added.
+- **NDVI is real NASA data.** `data/bd_ndvi_modis.csv` holds monthly 1 km NDVI (MODIS Terra
+  MOD13A3.061, Feb 2000 - Dec 2023) sampled at one point per division, requested through
+  [NASA AppEEARS](https://appeears.earthdatacloud.nasa.gov/). When this file is present the app
+  uses it automatically; months without a real observation (Jan 2000) are dropped.
+- Temperature and rainfall are still synthetic unless you fetch the NASA POWER data.
+- Caveat: each value is a single 1 km pixel at the division's coordinates, so coastal or river
+  pixels can read lower than the division as a whole. It is not a division-wide average.
 
 ## Quick start
 
@@ -28,9 +34,8 @@ Climate and environmental data explorer for Bangladesh, built with Python, Panda
 
 ## Roadmap
 
-- Real MODIS NDVI data
+- Division-wide NDVI averages (zonal statistics) instead of single points
 - District-level analysis with GeoPandas
-- Deployment on Streamlit Community Cloud
 
 ## License
 

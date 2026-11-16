@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .config import DATA_PATH, REAL_DATA_PATH
+from .config import DATA_PATH, NDVI_PATH, REAL_DATA_PATH
 
 REQUIRED_COLUMNS = {"date", "division", "temperature_c", "rainfall_mm", "ndvi"}
 
@@ -30,11 +30,26 @@ def validate_data(df: pd.DataFrame) -> None:
         raise ValueError("Dataset contains missing values")
 
 
+def apply_real_ndvi(df: pd.DataFrame, ndvi_path=NDVI_PATH) -> pd.DataFrame:
+    """Replace the ndvi column with real MODIS NDVI (wide CSV: date + one column per division).
+
+    Months without a real observation (MODIS starts in Feb 2000) are dropped
+    so the dashboard never mixes real and synthetic NDVI.
+    """
+    real = pd.read_csv(Path(ndvi_path), parse_dates=["date"])
+    real = real.melt(id_vars="date", var_name="division", value_name="ndvi")
+    real = real.dropna(subset=["ndvi"])
+    return df.drop(columns="ndvi").merge(real, on=["date", "division"], how="inner")
+
+
 def load_data(path=None) -> pd.DataFrame:
+    use_real_ndvi = path is None and Path(NDVI_PATH).exists()
     if path is None:
         ensure_data()
         path = default_path()
     df = pd.read_csv(Path(path), parse_dates=["date"])
+    if use_real_ndvi:
+        df = apply_real_ndvi(df)
     validate_data(df)
     df["year"] = df["date"].dt.year
     df["month"] = df["date"].dt.month
