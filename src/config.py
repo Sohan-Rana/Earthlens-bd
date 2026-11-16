@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "climate_data.csv"
 REAL_DATA_PATH = ROOT / "data" / "climate_data_real.csv"
+MODIS_NDVI_PATH = ROOT / "data" / "modis_ndvi_monthly.csv"
 ASSETS_DIR = ROOT / "assets"
 
 DIVISIONS = [

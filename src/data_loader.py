@@ -11,6 +11,18 @@ def default_path():
     return REAL_DATA_PATH if REAL_DATA_PATH.exists() else DATA_PATH
 
 
+def ndvi_source() -> str:
+    """'modis' when real MODIS NDVI is present, otherwise 'synthetic'."""
+    from .modis_ndvi import has_modis
+
+    return "modis" if has_modis() else "synthetic"
+
+
+def data_source() -> str:
+    """'real' when NASA POWER data is present, otherwise 'sample'."""
+    return "real" if REAL_DATA_PATH.exists() else "sample"
+
+
 def ensure_data() -> None:
     """Create the synthetic sample dataset if no data file exists yet."""
     if DATA_PATH.exists() or REAL_DATA_PATH.exists():
@@ -25,8 +37,9 @@ def validate_data(df: pd.DataFrame) -> None:
     missing = REQUIRED_COLUMNS - set(df.columns)
     if missing:
         raise ValueError(f"Missing columns: {sorted(missing)}")
-    numeric = list(REQUIRED_COLUMNS - {"date", "division"})
-    if df[numeric].isna().any().any():
+    # NDVI may be empty (MODIS starts in Feb 2000); other variables must be complete.
+    required_numeric = ["temperature_c", "rainfall_mm"]
+    if df[required_numeric].isna().any().any():
         raise ValueError("Dataset contains missing values")
 
 

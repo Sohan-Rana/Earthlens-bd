@@ -1,0 +1,43 @@
+name: Fetch NASA POWER data
+
+# Downloads real monthly temperature and rainfall from NASA POWER on GitHub's
+# servers and commits data/climate_data_real.csv to the same branch.
+# Runs when this file is pushed to post-submission, or manually (Actions tab).
+on:
+  workflow_dispatch:
+  push:
+    branches: [post-submission]
+    paths: [.github/workflows/fetch-power-data.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Download NASA POWER data
+        run: python -m scripts.fetch_power_data
+      - name: Sanity check
+        run: |
+          python - <<'EOF'
+          from src.data_loader import load_data
+          from src.config import REAL_DATA_PATH
+          df = load_data(REAL_DATA_PATH)
+          print(df.groupby("division")["temperature_c"].agg(["count", "mean"]).round(2))
+          assert df["division"].nunique() == 8, "expected 8 divisions"
+          assert len(df) > 2000, "too few rows"
+          assert df["temperature_c"].between(10, 40).all(), "temperature out of range"
+          EOF
+      - name: Commit data file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/climate_data_real.csv
+          git diff --cached --quiet || git commit -m "Add real NASA POWER data (monthly T2M and rainfall)"
+          git push

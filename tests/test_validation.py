@@ -19,3 +19,14 @@ def test_validate_data_rejects_nan_values():
     })
     with pytest.raises(ValueError):
         validate_data(df)
+
+
+def test_validate_data_allows_missing_ndvi():
+    df = pd.DataFrame({
+        "date": ["2000-01-01"],
+        "division": ["Dhaka"],
+        "temperature_c": [20.0],
+        "rainfall_mm": [1.0],
+        "ndvi": [None],
+    })
+    validate_data(df)
